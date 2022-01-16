@@ -1,0 +1,37 @@
+[user]
+  email = george-alehandro.SAAD@etu.univ-amu.fr
+  name = George Alehandro Saad
+
+[core]
+  editor = gedit
+  excludesfile = ~/.gitignore
+
+[color]
+  ui = true
+
+[color "branch"]
+  current = yellow reverse
+  local = yellow
+  remote = green
+
+[color "diff"]
+  whitespace = red reverse
+
+[color "status"]
+  added = yellow
+  changed = green
+  untracked = cyan
+
+[alias]
+  st = status
+  co = checkout
+  ci = commit -v
+  br = branch
+  ap = add -p
+  sl = shortlog
+  pl = log --oneline --graph --decorate --date=short --date-order
+  hist = log --pretty='%C(yellow)%h %C(green)%ad%C(auto)%d %C(reset)%s %C(cyan)[%an]' --graph --date=short
+  hista = log --pretty='%C(yellow)%h %C(green)%ad%C(auto)%d %C(reset)%s %C(cyan)[%an]' --graph --date=short --all --date-order
+  di = diff
+  ds = diff --staged
+  dw = diff --color-words
