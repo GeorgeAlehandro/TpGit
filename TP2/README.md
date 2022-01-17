@@ -26,6 +26,7 @@ Since the file can contain more than one sequence, it's important to split the s
 For the moment the accepted separators between the sequences are:  
 - Tabulation (\t)
 - Newline (\n)
+- Backspace (\b)
 ## Output
 For each sequence the line of the user should be able to identify the line of the sequence analyzed, the ID. 
 After that, the output depends on the result of the script.  
@@ -35,3 +36,6 @@ After that, the output depends on the result of the script.
 ## Optional arguments
 - (-n): Adds 'N' to the accepted nucleotids for the sequence analysis. To use when the the .fasta files are known to have N inside their annotations.
 - (-o): Saves the results of the analysis into a .txt file.  *Results will not be printed in the console, the user will find them inside the output file*
+
+## Author
+George Alehandro Saad
