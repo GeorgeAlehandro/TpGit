@@ -40,9 +40,11 @@ def is_valid(adn, bases=nucleotides):
 
     """
     adn = adn.lower()  # Unify format of letters, ignore spaces
-    for i in range(0, len(adn)):  # Iteration over all the letters of the chain
-        if adn[i] not in bases or len(adn) == 0:
-            return False, i, adn[i]
+    if len(adn) == 0:
+        return False, 0
+    for i, nuc in enumerate(adn):  # Iteration over all letters of the chain
+        if nuc not in nucleotides or len(adn) == 0:
+            return False, i, nuc
     return True, len(adn)
 
 
