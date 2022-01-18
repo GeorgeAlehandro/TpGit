@@ -1,0 +1,34 @@
+Reading sequence in line: 1	sequence id: >seq0
+
+This sequence is verified!
+The length of the sequence is: 79
+
+---------------------------------------
+Reading sequence in line: 4	sequence id: >seq1
+
+This sequence is not verified.
+Problem of annotation found at position: 87
+The script found a ['x']
+The length of the sequence is: 87
+
+---------------------------------------
+Reading sequence in line: 8	sequence id: >seq2
+
+This sequence is verified!
+The length of the sequence is: 123
+
+---------------------------------------
+Reading sequence in line: 10	sequence id: >seq3
+
+This sequence is not verified.
+Problem of annotation found at position: 103
+The script found a ['n']
+The length of the sequence is: 103
+
+---------------------------------------
+Reading sequence in line: 12	sequence id: >seq4
+
+This sequence is verified!
+The length of the sequence is: 76
+
+---------------------------------------
