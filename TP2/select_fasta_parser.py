@@ -57,25 +57,28 @@ def run(args):
                     '\t'+'sequence id: '+line+'\n'*2)
             seq = ''  # Initializing an empty string that stores the sequences
             for i in range(index+1, len(fasta_list)):
+                if not fasta_list[i].startswith('>'):
+                    seq += fasta_list[i].strip()  # Concatenates two sequences
+
                 if fasta_list[i].startswith('>') or i == len(fasta_list)-1:
                     # Retrive values from functions of adn.py file
                     verdict, result, *error = analyze_function(seq)
                     if verdict:
                         display('This sequence is verified!' +
                                 '\n')
+                    elif len(seq) == 0:
+                        display('Empty sequence.'+'\n')
                     else:
                         display('This sequence is not verified.' +
                                 '\n' +
                                 'Problem of annotation found at position: ' +
-                                str(result) + '\n' + 'The script found a ' +
+                                str(result+1) + '\n' + 'The script found a ' +
                                 str(error) + '\n')
                     if args.length:  # If the user specified the -l parameter
                         display('The length of the sequence is: ' +
-                                str(result)+'\n')
+                                str(len(seq))+'\n')
                     display('\n---------------------------------------\n')
                     break
-                # Concatenates two sequences
-                seq += fasta_list[i].strip()
 
 
 def main():
