@@ -30,3 +30,5 @@ if __name__ == "__main__":
     print('The length of the Chained List is: ' + str(cl.length()))
     print('Example done for benchmarking adding last element in two cases: ')
     random_gen(180)
+    print('Example of list to sorted chained list: ' +
+          str(list_to_chained_list([1, 10, 4, 5, 3])))
