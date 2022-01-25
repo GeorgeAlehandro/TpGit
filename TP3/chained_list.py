@@ -179,31 +179,21 @@ class ChainedList:
         """
             Deletes the node based on a value.
         """
-        temp = self.first_node
-
-        # If head node itself holds the key to be deleted
-        if temp is not None:
-            if temp.value == key:
-                self.first_node = temp.next
-                temp = None
+        cur_node = self.first_node
+        if cur_node is not None:
+            if cur_node.value == key:
+                self.first_node = cur_node.next
+                cur_node = None
                 return
-
-        # Search for the key to be deleted, keep track of the
-        # previous node as we need to change 'prev.next'
-        while temp is not None:
-            if temp.value == key:
+        while cur_node is not None:
+            if cur_node.value == key:
                 break
-            prev = temp
-            temp = temp.next
-
-        # if key was not present in linked list
-        if temp is None:
+            prev = cur_node
+            cur_node = cur_node.next
+        if cur_node is None:
             return
-
-        # Unlink the node from linked list
-        prev.next = temp.next
-
-        temp = None
+        prev.next = cur_node.next
+        cur_node = None
 
     def __str__(self):
         """
