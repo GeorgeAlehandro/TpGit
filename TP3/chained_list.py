@@ -60,6 +60,7 @@ class ChainedList:
     """
         Defines the Chained List
     """
+
     def __init__(self, nodes=None):
         """
             Constructor for the class ChainedList
@@ -193,6 +194,7 @@ class ChainedList:
             prev = cur_node
             cur_node = cur_node.next
         if cur_node is None:
+            print(str(key) + ' element not found')
             return
         prev.next = cur_node.next
         cur_node = None
