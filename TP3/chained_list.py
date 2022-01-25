@@ -1,44 +1,77 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
+"""
+    chained_list.py contains three different classes with many methods that in
+    the end build and manipulate Listed Links
+"""
+from __future__ import absolute_import
 from random import random
 import time
 import bisect
 
+__author__ = 'George Alehandro Saad'
+
 
 class Node:
+    """
+        Defines Nodes for the CHained List
+    """
+
     def __init__(self, value=None):
+        """
+            Constructor for the class Node, with parameter node
+        """
         self.value = value
         self.next = None  # Pointer to the next node
 
     def __str__(self):
-        # return str(self.value)
+        """
+            The manner nodes are printed inside the chained lists
+        """
         string = str(self.value)
-        if self.next != None:
+        if self.next is not None:
             string += ", " + str(self.next)
         return string
 
 
-class LinkedListIterator:
+class ChainedListIterator:
+    """
+        Defines the iteration for the Chained LIst
+    """
 
     def __init__(self, begin):
+        """
+            Constructor for the class ChainedListIterator
+        """
         self.first_node = begin
 
     def __next__(self):
-        if self.first_node == None:
+        """
+            Link between consecutive nodes to work as an itterator
+        """
+        if self.first_node is None:
             raise StopIteration
-        else:
-            item = self.first_node.value
-            self.first_node = self.first_node.next
+        item = self.first_node.value
+        self.first_node = self.first_node.next
         return item
 
 
 class ChainedList:
+    """
+        Defines the Chained List
+    """
+
     def __init__(self):
+        """
+            Constructor for the class ChainedList
+        """
         self.first_node = None  # first_node = head
 
     def add_first_node(self, value):
-        if self.first_node == None:
+        """
+            Adds a node in the beginning of the Chained List
+        """
+        if self.first_node is None:
             self.first_node = Node(value)
         else:
             node = Node(value)
@@ -46,16 +79,23 @@ class ChainedList:
             self.first_node = node
 
     def add_last_node(self, value):
-        if self.first_node == None:
+        """
+            Adds a node at the end of the Chained List
+        """
+        if self.first_node is None:
             self.first_node = Node(value)
         else:
             node = Node(value)
             added_node = self.first_node
-            while added_node.next != None:
+            while added_node.next is not None:
                 added_node = added_node.next
             added_node.next = node
 
     def add_node(self, value):
+        """
+            Adds a node in the Chained List. The added node will be directly
+            inserted in a sorted way.
+        """
         curr = self.first_node
         if curr is None:
             node = Node(value)
@@ -71,7 +111,7 @@ class ChainedList:
 
         while curr.next is not None:
             if curr.next.value == value:
-                print('ERROR: '+str(value)+' already added in the chained list.')
+                print('ERROR: '+str(value)+' already in the chained list.')
                 return
             if curr.next.value > value:
                 break
@@ -83,21 +123,27 @@ class ChainedList:
         return
 
     def __iter__(self):
-        return LinkedListIterator(self.first_node)
+        """
+            To iterate over the different elements of the Chained List.
+        """
+        return ChainedListIterator(self.first_node)
 
     def length(self):
-        # print(self.first_node)
+        """
+            Shows the length of the Chained List by counting each node.
+        """
         counted_node = self.first_node
         total = 0
-        while counted_node != None:
+        while counted_node is not None:
             # print(counted_node)
             total += 1
-            #print('total is' + str(total))
             counted_node = counted_node.next
-            #print('coming up next'+str(counted_node))
         return total
 
     def get(self, index):
+        """
+            Extracts the value of a node in a specified index.
+        """
         if index >= self.length() or index < 0:
             print('Index out of range')
             return None
@@ -110,6 +156,9 @@ class ChainedList:
             begin_index += 1
 
     def delete(self, index):
+        """
+            Deletes the node in a specified index.
+        """
         if index >= self.length():
             print('ERROR: Out of range')
             return
@@ -117,9 +166,7 @@ class ChainedList:
         node = self.first_node
         while True:
             if index == 0:
-                temp = self.first_node
                 self.first_node = self.first_node.next
-                temp = None
                 return self
             begin_index += 1
             last_node = node
@@ -128,109 +175,95 @@ class ChainedList:
                 last_node.next = node.next
                 return self
 
-    def deleteNode(self, key):
-
-        # Store head node
+    def delete_node(self, key):
+        """
+            Deletes the node based on a value.
+        """
         temp = self.first_node
 
         # If head node itself holds the key to be deleted
-        if (temp is not None):
-            if (temp.value == key):
+        if temp is not None:
+            if temp.value == key:
                 self.first_node = temp.next
                 temp = None
                 return
 
         # Search for the key to be deleted, keep track of the
         # previous node as we need to change 'prev.next'
-        while(temp is not None):
+        while temp is not None:
             if temp.value == key:
                 break
             prev = temp
             temp = temp.next
 
         # if key was not present in linked list
-        if(temp == None):
+        if temp is None:
             return
 
         # Unlink the node from linked list
         prev.next = temp.next
 
         temp = None
-    # def remove_node(self, target_node_data):
-    #     if self.first_node is None:
-    #         raise Exception("List is empty")
-    #     if self.first_node.value == target_node_data:
-    #         self.first_node = self.first_node.next
-    #         return
-    #     previous_node = self.first_node
-    #     for node in self:
-    #         if node == target_node_data:
-    #             previous_node.next = node.next
-    #             return
-    #         previous_node = node
-    #     raise Exception("Node with data '%s' not found" % target_node_data)
 
     def __str__(self):
+        """
+            The manner the chained lists are printed.
+        """
         if self.first_node is None:
             return "liste vide"
         return str(self.first_node)
 
     def __getitem__(self, index):
+        """
+            Permits to call elements by using brackets '[]'
+        """
         return self.get(index)
 
 
 def random_gen(number):
+    """
+        Calls the two functions to make a kind of time comparison between
+        chained list and a list
+    """
     chainedlist_gen(number)
     list_gen(number)
 
 
 def chainedlist_gen(number):
-    cl = ChainedList()
+    """
+    Generates a Chained List and benchmarks the timing of a specified operation
+    """
+    clst = ChainedList()
     for _ in range(number):
-        cl.add_node(random())
+        clst.add_node(random())
     start = time.time()
-    cl.add_last_node(random())
+    clst.add_last_node(random())
     end = time.time()
-    print(f"Runtime of the program is {end - start}")
-    return cl
+    print(f"Runtime of the command on the Chained List is {end - start}")
+    return clst
 
 
 def list_gen(number):
-    l = []
+    """
+    Generates a list and benchmarks the timing of a specified operation
+    """
+    lst = []
     for _ in range(number):
-        l.append(random())
-    l.sort()
+        lst.append(random())
+    lst.sort()
     start = time.time()
-    bisect.insort(l, random())
-    l.append(random())
+    bisect.insort(lst, random())
+    lst.append(random())
     end = time.time()
-    print(f"Runtime of the program is {end - start}")
-    return l
+    print(f"Runtime of the command on the list is {end - start}")
+    return lst
 
 
-cl = ChainedList()
-cl.add_node(1)
-cl.add_node(2)
-cl.add_node(3)
-cl.add_node(6)
-cl.add_node(6)
-# cl.add_first_node(9)
-# cl.deleteNode(2)
-# cl.add_last_node(7)
-print(cl)
-print(cl[2])
-cl[2]
-# print(cl.length())
-# print(cl)
-# print(cl.extract(0))
-# print(cl.delete(0))
-# print(cl.delete(0))
-
-
-# print(cl.delete(2))
-# print(cl.delete(4))
-# random_gen(900)
-
-# print(cl.delete(2))
-# print(cl.delete(4))
-random_gen(9000)
+def list_to_chained_list(input_list):
+    """
+    Generates a sorted chained list with unique values from an input list.
+    """
+    clst = ChainedList()
+    for element in input_list:
+        clst.add_node(element)
+    return clst
