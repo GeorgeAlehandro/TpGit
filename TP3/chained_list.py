@@ -60,12 +60,14 @@ class ChainedList:
     """
         Defines the Chained List
     """
-
-    def __init__(self):
+    def __init__(self, nodes=None):
         """
             Constructor for the class ChainedList
         """
         self.first_node = None  # first_node = head
+        if isinstance(nodes, list):
+            for _ in nodes:
+                self.add_node(_)
 
     def add_first_node(self, value):
         """
