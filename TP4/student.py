@@ -52,7 +52,7 @@ class Student(Person):
         else:
             print("Registered subject non existent.")
 
-    def set_note(self, subject, note=None):
+    def set_note(self, subject, note):
         '''
         Modifying a grade for a student already registered in that course.
         '''
