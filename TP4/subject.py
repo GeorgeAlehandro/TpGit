@@ -66,23 +66,3 @@ class Subject:
         sentence = ('All the grades in subject ' + self.name_of_subject +
                     ' are ' + (', '.join(str(grade) for grade in self.notes)))
         return sentence
-
-    def modify_classroom(self, new_classroom):
-        '''
-        Sets the classroom of a subject, in case of change, prompts.
-        '''
-        if not isinstance(new_classroom, Classroom):
-            return('Classroom non existent')
-        if self.classroom != new_classroom:
-            confirmation = input(
-                "Please confirm your choice by typing Y/N" + '\n')
-            if confirmation.upper() == 'Y':
-                self.classroom = new_classroom
-                print('The classroom for this subject' +
-                      ' has been changed to: ' + str(new_classroom))
-            elif confirmation.upper() == 'N':
-                print('Confirmation failed.')
-            else:
-                self.setclassroom(new_classroom)
-        else:
-            print('Classroom number inserted is the same as before.')
