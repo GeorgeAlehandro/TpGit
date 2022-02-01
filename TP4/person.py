@@ -31,7 +31,7 @@ class Person:
         else:
             print('Bad email input')
 
-    def setlastname(self, new_lastname):
+    def set_lastname(self, new_lastname):
         '''
         To set the Person's last name
         '''
@@ -40,7 +40,7 @@ class Person:
         else:
             print('Bad last name input')
 
-    def setfirstname(self, new_firstname):
+    def set_firstname(self, new_firstname):
         '''
         To set the Person's first name
         '''
@@ -49,7 +49,7 @@ class Person:
         else:
             print('Bad first name input')
 
-    def setphonenumber(self, new_phone_number):
+    def set_phonenumber(self, new_phone_number):
         '''
         To set the Person's phone number
         '''
@@ -58,7 +58,7 @@ class Person:
         else:
             print('Bad phone number input')
 
-    def setemail(self, new_email):
+    def set_email(self, new_email):
         '''
         To set the Person's email
         '''
@@ -67,7 +67,7 @@ class Person:
         else:
             print('Bad email input')
 
-    def getinformation(self):
+    def get_information(self):
         '''
         To obtain the Person's basic information
         '''
