@@ -13,7 +13,7 @@ https://docs.python.org/3/library/unittest.html
 
 ## Requirements
 To run this test, python3 is needed to be installed along with the packages mentioned inside.  
-The file list_list.py needs to be on the same directory as the test_linked_list.py.
+The file linked_list.py needs to be on the same directory as the test_linked_list.py.
 
 
 ## About linked_list.py
@@ -25,8 +25,8 @@ Also new input verifications were added, specifically strings, floats, integers 
 ## To run the script
 
 ```bash
-git clone https://github.com/GeorgeAlehandro/TpGit/blob/master/TP3/chained_list.py
-python3 test_linked_list.py
+git clone https://github.com/GeorgeAlehandro/TpGit/
+python3 TpGit/TP5/test_linked_list.py
 ```
 
 ## Author
