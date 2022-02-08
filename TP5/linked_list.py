@@ -226,8 +226,7 @@ class LinkedList:
         '''
         a_curr = self.first_node
         b_curr = second_list.first_node
-        if a_curr is None and b_curr is not None or \
-                a_curr is not None and b_curr is None:
+        if self.length() != second_list.length():
             return False
         while (a_curr is not None and b_curr is not None):
             if a_curr.value != b_curr.value:
