@@ -31,9 +31,6 @@ class View():
         parser.add_argument('-i', '--insertperson',
                             help="to insert person",
                             nargs='+', required=False)
-        parser.add_argument('-t', '--testing',
-                            help="to insert person",
-                            nargs='+', required=False)
         parser.add_argument('-s', '--searchperson',
                             help="to search person",
                             nargs='+', required=False)
