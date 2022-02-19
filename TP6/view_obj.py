@@ -24,7 +24,8 @@ Class View of the project
 
 class View(Tk, SuperView):
     def __init__(self, controller):
-        super().__init__(controller)
+        super().__init__()
+        SuperView.__init__(self, controller)
         self.widgets_labs = {}
         self.widgets_entry = {}
         self.widgets_button = {}
