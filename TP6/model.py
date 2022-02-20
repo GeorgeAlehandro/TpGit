@@ -1,48 +1,93 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+"""
+The model file for the MVC structure of the phonebook program.
+"""
+from __future__ import absolute_import
 import os.path
 import pickle
-import inspect
 
 
 class Person:
-    def __init__(self, nom, prenom, telephone=None, adresse=None, ville=None):
-        self.set_nom(nom)
-        self.set_prenom(prenom)
+    '''
+    Defines Person objects to be inserted
+    '''
+
+    def __init__(self, surname, name, telephone=None, address=None, city=None):
+        '''
+        Constructor for person
+        '''
+        self.set_surname(surname)
+        self.set_name(name)
         self.telephone = telephone
-        self.adresse = adresse
-        self.ville = ville
-       # self.id =
+        self.address = address.capitalize().lstrip().rstrip()
+        self.city = city.capitalize().lstrip().rstrip()
 
-    def set_nom(self, nom):
-        if isinstance(nom, str) and all(x.isalpha() or x.isspace() for x in nom) and len(nom) > 0:
-            self.nom = nom
+    def set_surname(self, surname):
+        '''
+        Surname setter.
+        '''
+        if (isinstance(surname, str)
+            and all(x.isalpha() or x.isspace() for x in surname)
+                and len(surname) > 0):
+            self.surname = surname.lstrip().rstrip()
 
-    def get_nom(self):
-        return self.nom
+    def get_surname(self):
+        '''
+        Surname getter.
+        '''
+        return self.surname
 
-    def set_prenom(self, prenom):
-        if isinstance(prenom, str) and all(x.isalpha() or x.isspace() for x in prenom) and len(prenom) > 0:
-            self.prenom = prenom
+    def set_name(self, name):
+        '''
+        Name setter.
+        '''
+        if (isinstance(name, str)
+            and all(x.isalpha() or x.isspace() for x in name)
+                and len(name) > 0):
+            self.name = name.lstrip().rstrip()
 
     def get_prenom(self):
-        return self.prenom
+        '''
+        Surname getter.
+        '''
+        return self.name
 
     def get_telephone(self):
+        '''
+        Telephone getter.
+        '''
         if self.telephone is not None:
-            return self.telephone
+            if str(self.telephone).isdigit():
+                return self.telephone
+            else:
+                print('Telephone should be only digits.')
+                return ''
 
-    def get_adresse(self):
-        if self.adresse is not None:
-            return self.adresse
+    def get_address(self):
+        '''
+        Address getter.
+        '''
+        # if self.address is not None:
+        return self.address
 
-    def get_ville(self):
-        if self.ville is not None:
-            return self.ville
+    def get_city(self):
+        '''
+        City getter.
+        '''
+        # if self.city is not None:
+        return self.city
 
 
 class Ensemble:
+    '''
+    Defines Ensemble object, which will be the content of the notebook.
+    '''
+
     def __init__(self):
+        '''
+        Ensemble class constructor.
+        '''
         if os.path.isfile('output_new.pickle'):
             infile = open('output_new.pickle', 'rb')
             self.list_person = pickle.load(infile)
@@ -52,59 +97,65 @@ class Ensemble:
             self.list_person = {}
 
     def insert_person(self, person):
+        '''
+        Person insertion inside Ensemble behavior and verification.
+        '''
         if isinstance(person, Person):
-            person.set_nom(person.get_nom().capitalize())
-            person.set_prenom(person.get_prenom().capitalize())
+            if not hasattr(person, 'surname') or not hasattr(person, 'name'):
+                print('For inserting, name and surname should be defined.')
+                return None
+            person.set_surname(person.get_surname().capitalize())
+            person.set_name(person.get_prenom().capitalize())
             list_attributs = {}
-            prenom = person.prenom
-            nom = person.nom
-            list_attributs['name'] = nom
-            list_attributs['prenom'] = prenom
+            name = person.name
+            surname = person.surname
+            list_attributs['surname'] = surname
+            list_attributs['name'] = name
             if person.telephone is not None:
                 list_attributs['telephone'] = person.get_telephone()
-            if person.adresse is not None:
-                list_attributs['adresse'] = person.get_adresse()
-            if person.ville is not None:
-                list_attributs['ville'] = person.get_ville()
-            self.list_person[f"{prenom} {nom}"] = list_attributs
+            if person.address is not None:
+                list_attributs['address'] = person.get_address()
+            if person.city is not None:
+                list_attributs['city'] = person.get_city()
+            for information in self.list_person.values():
+                if (surname == information['surname']
+                        and name == information['name']):
+                    self.list_person[f"{name} {surname}"] = list_attributs
+                    return 'Person already exists. Data overwritten'
+            self.list_person[f"{name} {surname}"] = list_attributs
             return "Inserted"
         return None
 
-    def deleteperson(self, category, name):
-        if isinstance(category, str):
-            values_to_del = []
-            for identification, information in self.list_person.items():
-                try:
-                    if name in information[category]:
-                        values_to_del.append(identification)
-                except KeyError:
-                    next
-            for to_del in values_to_del:
-                del self.list_person[to_del]
-            return('Deleted: '+''.join(values_to_del))
-
     def delete_person(self, person):
-        if isinstance(person, tuple):
+        '''
+        Person removal from an Ensemble.
+        '''
+        if isinstance(person, (tuple, list)):
             names_fetched = []
             name_searched = person[0].capitalize()
             prenom_searched = person[1].capitalize()
            # if tel_searched
             for identification, information in self.list_person.items():
                 try:
-                    if name_searched in information['name'] and prenom_searched in information['prenom']:
+                    if (name_searched == information['surname']
+                            and prenom_searched == information['name']):
                         names_fetched.append(identification)
                 except KeyError:
                     next
             if len(names_fetched) > 0:
                 for name in names_fetched:
                     del self.list_person[name]
-                    return 'Deleted'
+                    print('Deleted ' + name)
+                return names_fetched
             else:
                 return None
 
     def display_all(self):
+        '''
+        Shows the content of the ensemble.
+        '''
         content_display = []
-        for key, value in self.list_person.items():
+        for value in self.list_person.values():
             content_display.append(value)
         return content_display
 
@@ -112,7 +163,7 @@ class Ensemble:
     #     names_fetched = []
     #     for identification, information in self.list_person.items():
     #         try:
-    #             if name in information[category]:
+    #             if surname in information[category]:
     #                 names_fetched.append(information)
     #         except KeyError:
     #             next
@@ -122,17 +173,21 @@ class Ensemble:
     #         return None
 
     def search_person(self, person):
-        if isinstance(person, tuple):
+        '''
+        Function to look up persons inside the Ensemble.
+        '''
+        if isinstance(person, (tuple, list)):
             names_fetched = []
             name_searched = person[0].capitalize()
             prenom_searched = person[1].capitalize()
             tel_searched = person[2]
-            adresse_searched = person[3]
-            ville_searched = person[4]
-           # if tel_searched
-            for identification, information in self.list_person.items():
+            adresse_searched = person[3].capitalize()
+            ville_searched = person[4].capitalize()
+            # if tel_searched
+            for information in self.list_person.values():
                 try:
-                    if name_searched in information['name'] and prenom_searched in information['prenom']:
+                    if (name_searched in information['surname']
+                            and prenom_searched in information['name']):
                         names_fetched.append(information)
                         if tel_searched != '':
                             for fetched in names_fetched:
@@ -140,11 +195,11 @@ class Ensemble:
                                     names_fetched.remove(fetched)
                         if adresse_searched != '':
                             for fetched in names_fetched:
-                                if adresse_searched not in fetched['adresse']:
+                                if adresse_searched not in fetched['address']:
                                     names_fetched.remove(fetched)
                         if ville_searched != '':
                             for fetched in names_fetched:
-                                if tel_searched not in fetched['ville']:
+                                if ville_searched not in fetched['city']:
                                     names_fetched.remove(fetched)
 
                 except KeyError:
@@ -154,14 +209,16 @@ class Ensemble:
             else:
                 return None
 
-    def intersection(self, list1, list2):
-        list3 = [value for value in list1 if value in list2]
-        return list3
-
     def save(self):
+        '''
+        Function to save the model.
+        '''
         file_to_write = open("output_new.pickle", "wb")
         pickle.dump(self.list_person, file_to_write)
         file_to_write.close()
 
     def __str__(self):
+        '''
+        To represent the print when needed.
+        '''
         return str(self.list_person)
