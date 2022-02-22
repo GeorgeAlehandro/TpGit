@@ -42,7 +42,9 @@ A package used to save the progress of writing the contacts and load the Phone B
 The file will check for the presence of a pickle save file on launch, if not found will create a new one.
 ## Data representation
 When showing the content of the book or while searching, the data will be presented in a Treeview.
-
+## Two ways to delete an entry
+Either by entering the exact surname and name then deleting.  
+Or by using the Tkinter interface and then Display or Search and click the entries that you are willing to delete.
 ## Things I could improve
 Create a random ID for each person inserted that replaces the key value of the dictionnary, this way people with the same name and surname can co-exist inside the Phone Book. Then I could modify the delete function to prompt the user for his choice of which contact should be deleted.
 ## To run the script
