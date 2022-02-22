@@ -150,6 +150,8 @@ class View(Tk, SuperView):
         else:
             messagebox.showerror(
                 title, self.error_messages[0])
+        for value in self.widgets_entry.values():
+            value.delete(0, 'end')
 
     def on_closing(self):
         '''
