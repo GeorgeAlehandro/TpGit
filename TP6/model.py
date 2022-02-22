@@ -20,8 +20,8 @@ class Person:
         self.set_surname(surname)
         self.set_name(name)
         self.telephone = telephone
-        self.address = address.capitalize().lstrip().rstrip()
-        self.city = city.capitalize().lstrip().rstrip()
+        self.address = address.title().lstrip().rstrip()
+        self.city = city.title().lstrip().rstrip()
 
     def set_surname(self, surname):
         '''
@@ -103,8 +103,8 @@ class Ensemble:
             if not hasattr(person, 'surname') or not hasattr(person, 'name'):
                 print('For inserting, name and surname should be defined.')
                 return None
-            person.set_surname(person.get_surname().capitalize())
-            person.set_name(person.get_prenom().capitalize())
+            person.set_surname(person.get_surname().title())
+            person.set_name(person.get_prenom().title())
             list_attributs = {}
             name = person.name
             surname = person.surname
@@ -131,8 +131,8 @@ class Ensemble:
         '''
         if isinstance(person, (tuple, list)):
             names_fetched = []
-            name_searched = person[0].capitalize()
-            prenom_searched = person[1].capitalize()
+            name_searched = person[0].title()
+            prenom_searched = person[1].title()
            # if tel_searched
             for identification, information in self.list_person.items():
                 try:
@@ -176,11 +176,11 @@ class Ensemble:
         '''
         if isinstance(person, (tuple, list)):
             names_fetched = []
-            name_searched = person[0].capitalize()
-            prenom_searched = person[1].capitalize()
+            name_searched = person[0].title()
+            prenom_searched = person[1].title()
             tel_searched = person[2]
-            adresse_searched = person[3].capitalize()
-            ville_searched = person[4].capitalize()
+            adresse_searched = person[3].title()
+            ville_searched = person[4].title()
             # if tel_searched
             for information in self.list_person.values():
                 try:
