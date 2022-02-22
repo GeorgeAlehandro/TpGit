@@ -47,11 +47,14 @@ class Controller():
             # if fetching is not None:
             self.view.result_presentation(fetching)
 
-    def delete(self):
+    def delete(self, specific=None):
         '''
         Processes the removal request of a person inside the notebook.
         '''
-        values_unpack = self.view.get_value()
+        if specific is None:
+            values_unpack = self.view.get_value()
+        else:
+            values_unpack = specific
         if values_unpack:
             deleted = self.model.delete_person(values_unpack)
             self.view.delete_display('Deleted', deleted)
