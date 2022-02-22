@@ -32,45 +32,64 @@ class View(Tk, SuperView):
         self.buttons = ["Search", "Insert", "Remove"]
         self.extrabuttons = ["Content", "Clear"]
         self.autocomplete_values = []
+        self.list_surname = []
+        self.list_name = []
+        self.list_telephone = []
+        self.list_address = []
+        self.list_city = []
 
     def fetch_autocomplete_values(self):
         '''
         Returns a list containing the elements to be used in the autocompletion
         entry. Elements are inside the memory.
         '''
-        (list_surname, list_name,
-         list_telephone, list_address,
-         list_city) = self.controller.memory_generator()
-        self.autocomplete_values = [list_surname, list_name,
-                                    list_telephone,
-                                    list_address, list_city]
-        print(self.autocomplete_values)
+        (self.list_surname, self.list_name,
+         self.list_telephone, self.list_address,
+         self.list_city) = self.controller.memory_generator()
+        self.autocomplete_values = [self.list_surname, self.list_name,
+                                    self.list_telephone,
+                                    self.list_address, self.list_city]
 
     def get_value(self):
         '''
         Returns the values introduced by the user.
         '''
-        entry_fetch = (self.widgets_entry["Surname"].get(),
+        entry_fetch = (self.widgets_entry["Surname"].get().capitalize(),
                        self.widgets_entry["Name"].get(
-        ), self.widgets_entry["Telephone"].get(),
-            self.widgets_entry["Address"].get(),
-            self.widgets_entry["City"].get())
+        ).capitalize(), self.widgets_entry["Telephone"].get().capitalize(),
+            self.widgets_entry["Address"].get().capitalize(),
+            self.widgets_entry["City"].get().capitalize())
         if all(item == '' for item in entry_fetch):
             messagebox.showerror('Entry unavailable',
-                                 'Entries cannot be all empty.')
+                                 self.error_messages[3])
             return False
         if (not self.widgets_entry["Telephone"].get().isdigit() and
                 self.widgets_entry["Telephone"].get() != ''):
             messagebox.showerror(
-                'Insertion error', "Telephone should be only digits.")
+                'Insertion error', self.error_messages[2])
             return False
-        # self.list_surname.append(entry_fetch[0])
-        # self.list_name.append(entry_fetch[1])
-        # self.list_telephone.append(entry_fetch[2])
-        # self.list_address.append(entry_fetch[3])
-        # self.list_city.append(entry_fetch[4])
-        # self.fetch_autocomplete_values()
+        self.list_surname.append(entry_fetch[0])
+        self.list_name.append(entry_fetch[1])
+        self.list_telephone.append(entry_fetch[2])
+        self.list_address.append(entry_fetch[3])
+        self.list_city.append(entry_fetch[4])
+        self.update_values()
         return entry_fetch
+
+    def update_values(self):
+        '''
+        To update autocomplete values after user entry.
+        '''
+        self.widgets_entry["Surname"].config(
+            completevalues=self.list_surname)
+        self.widgets_entry["Name"].config(
+            completevalues=self.list_name)
+        self.widgets_entry["Telephone"].config(
+            completevalues=self.list_telephone)
+        self.widgets_entry["Address"].config(
+            completevalues=self.list_address)
+        self.widgets_entry["City"].config(
+            completevalues=self.list_city)
 
     def create_fields(self):
         '''
@@ -89,7 +108,6 @@ class View(Tk, SuperView):
                 completevalues=self.autocomplete_values[i]
 
             )
-            print(self.autocomplete_values[i])
             self.widgets_entry[idi] = entry
             entry.grid(row=i, column=1)
 
@@ -119,7 +137,7 @@ class View(Tk, SuperView):
         if result is not None:
             messagebox.showinfo(title, result)
         else:
-            messagebox.showerror(title, 'Surname Name not found in phonebook.')
+            messagebox.showerror(title, self.error_messages[1])
 
     def insertion_display(self, title, result):
         '''
@@ -127,9 +145,10 @@ class View(Tk, SuperView):
         '''
         if result is not None:
             messagebox.showinfo(title, result)
+            self.fetch_autocomplete_values()
         else:
             messagebox.showerror(
-                title, 'You need to specify name and surname.')
+                title, self.error_messages[0])
 
     def on_closing(self):
         '''
@@ -166,7 +185,6 @@ class View(Tk, SuperView):
                 for selected_item in tree.selection():
                     item = tree.item(selected_item)
                     record = item['values']
-                    print(record)
                     messagebox.showinfo(title='Information',
                                         message=record, parent=treepresentation)
             tree.bind('<<TreeviewSelect>>', item_selected)
