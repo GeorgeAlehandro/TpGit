@@ -26,7 +26,7 @@ class View(SuperView):
         """ Declares new parser and adds parser arguments
         Two group of parsers: Optional and required"""
         program_description = ''' Phonebook MVC model.
-        For inserting, deleting, and searching, use the order:
+        For inserting, deleting, and searching, using the order:
               'Surname, Name, Telephone, Address, City' '''
         self.parser = argparse.ArgumentParser(
             add_help=True, description=program_description)
@@ -72,8 +72,11 @@ class View(SuperView):
         for element in self.entries:
             entry_fetch[i] = input('What is the ' + element + '?'+'\n')
             i += 1
+        if all(item == '' for item in entry_fetch):
+            print(self.error_messages[3])
+            return False
         if not entry_fetch[2].isdigit() and entry_fetch[2] != '':
-            print('Error: Telephone number should be only digits.')
+            print(self.error_messages[2])
             return False
         return entry_fetch
 
@@ -84,7 +87,7 @@ class View(SuperView):
         if result is not None:
             print(title, result)
         else:
-            print('Surname Name not found.')
+            print(self.error_messages[1])
 
     def insertion_display(self, title, result):
         '''
@@ -93,7 +96,7 @@ class View(SuperView):
         if result is not None:
             print(title, result)
         else:
-            print('You need to specify name and surname.')
+            print(self.error_messages[0])
 
     def result_presentation(self, items_list):
         '''
