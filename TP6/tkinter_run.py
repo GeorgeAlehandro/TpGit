@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Sat Feb 19 00:56:13 2022
-
-@author: ubuntu
+Run this file to directly access the Tkinter View.
 """
 import os
 os.system(
-    "gnome-terminal -e 'bash -c \"python3 main.py -g; exec bash\"'")
+    "gnome-terminal -e 'bash -c \"python3 main.py -g;\"'")
