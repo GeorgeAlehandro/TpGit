@@ -61,7 +61,6 @@ class Person:
             if str(self.telephone).isdigit():
                 return self.telephone
             else:
-                print('Telephone should be only digits.')
                 return ''
 
     def get_address(self):
@@ -92,7 +91,7 @@ class Ensemble:
             infile = open('output_new.pickle', 'rb')
             self.list_person = pickle.load(infile)
             infile.close()
-            print('Save file found.')
+            #print('Save file found.')
         else:
             self.list_person = {}
 
@@ -145,7 +144,6 @@ class Ensemble:
             if len(names_fetched) > 0:
                 for name in names_fetched:
                     del self.list_person[name]
-                    print('Deleted ' + name)
                 return names_fetched
             else:
                 return None
