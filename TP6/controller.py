@@ -29,12 +29,6 @@ class Controller():
         '''
         self.view.main()
 
-    # def view_choice(self, choice):
-    #     if choice == 1:
-    #         self.view = view_obj.View(self)
-
-    #         self.view = view_cli.View(self)
-    #     self.start_view()
     def switch_view(self):
         '''
         Switches from the CLI view into graphical one (Tkinter).
