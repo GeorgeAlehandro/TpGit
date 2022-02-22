@@ -11,6 +11,7 @@ from tkinter import Tk
 from tkinter import Toplevel
 from tkinter import messagebox
 from tkinter.ttk import Treeview
+from tkinter.ttk import Scrollbar
 from ttkwidgets.autocomplete import AutocompleteEntry
 from view import SuperView
 
@@ -54,11 +55,11 @@ class View(Tk, SuperView):
         '''
         Returns the values introduced by the user.
         '''
-        entry_fetch = (self.widgets_entry["Surname"].get().capitalize(),
+        entry_fetch = (self.widgets_entry["Surname"].get().title(),
                        self.widgets_entry["Name"].get(
-        ).capitalize(), self.widgets_entry["Telephone"].get().capitalize(),
-            self.widgets_entry["Address"].get().capitalize(),
-            self.widgets_entry["City"].get().capitalize())
+        ).title(), self.widgets_entry["Telephone"].get().title(),
+            self.widgets_entry["Address"].get().title(),
+            self.widgets_entry["City"].get().title())
         if all(item == '' for item in entry_fetch):
             messagebox.showerror('Entry unavailable',
                                  self.error_messages[3])
@@ -98,7 +99,7 @@ class View(Tk, SuperView):
         i, j, k = 0, 0, 0
 
         for idi in self.entries:
-            lab = Label(self, text=idi.capitalize())
+            lab = Label(self, text=idi.title())
             self.widgets_labs[idi] = lab
             lab.grid(row=i, column=0)
             entry = AutocompleteEntry(
@@ -180,6 +181,11 @@ class View(Tk, SuperView):
                     person['address'], person['city']))
 
             tree.grid(row=0, column=0, sticky='nsew')
+            vsb = Scrollbar(treepresentation,
+                            orient="vertical", command=tree.yview)
+            vsb.grid(row=0, column=1, sticky='nsw')
+
+            tree.configure(yscrollcommand=vsb.set)
 
             def item_selected(event):
                 for selected_item in tree.selection():
