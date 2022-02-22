@@ -187,13 +187,18 @@ class View(Tk, SuperView):
 
             tree.configure(yscrollcommand=vsb.set)
 
-            def item_selected(event):
+            def item_delete(event):
                 for selected_item in tree.selection():
                     item = tree.item(selected_item)
                     record = item['values']
-                    messagebox.showinfo(title='Information',
-                                        message=record, parent=treepresentation)
-            tree.bind('<<TreeviewSelect>>', item_selected)
+                    message_verif = 'Are you sure you want to\
+                        delete the selected element?'
+                    answer = messagebox.askyesno(title='Information',
+                                                 message=message_verif,
+                                                 parent=treepresentation)
+                    if answer:
+                        self.controller.delete(record)
+            tree.bind('<<TreeviewSelect>>', item_delete)
             quit_button = Button(treepresentation,  text="Quit",
                                  command=lambda: treepresentation.destroy())
             quit_button.grid(row=1, column=0, sticky='s')
