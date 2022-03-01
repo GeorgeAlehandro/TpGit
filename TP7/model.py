@@ -96,13 +96,6 @@ class Ensemble:
         '''
         Ensemble class constructor.
         '''
-        # if os.path.isfile('output_new.pickle'):
-        #     infile = open('output_new.pickle', 'rb')
-        #     self.list_person = pickle.load(infile)
-        #     infile.close()
-        #     #print('Save file found.')
-        # else:
-        #     self.list_person = {}
         self.connection = mysql.connector.connect(
             host=monServeur, user=monLogin, password=password, database="TP7")
         self.cursor = self.connection.cursor()
@@ -122,7 +115,6 @@ class Ensemble:
                 self.cursor.execute(query)
                 for idi in self.cursor.fetchall():
                     if int(person.idi) == idi[0]:  # Match on id:
-                        # UPDATE `person` SET `surname` = %s, `name` = %s, `telephone` = %s, `address` = %s, `city` = %s WHERE `person`.`ID` = 1;
                         query_2 = (
                             "UPDATE `person` SET `surname` = %s, `name` = %s, `telephone` = %s, `address` = %s, `city` = %s WHERE `person`.`ID` = %s;")
                         update = person_info
@@ -144,14 +136,17 @@ class Ensemble:
         '''
         if isinstance(person, (tuple, list)):
             query = ("DELETE FROM `person` WHERE `person`.`ID` = %s")
-            number = tuple(person[0])
-            print(type(number))
-            self.cursor.execute(query, number)
-            self.connection.commit()
-            self.cursor.close()
-            return number
-        else:
-            return None
+            number = [person[0]]
+            query_2 = ("Select `ID` from `person`;")
+            self.cursor.execute(query_2)
+            for idi in self.cursor.fetchall():
+                if int(''.join(number)) == idi[0]:
+                    self.cursor.execute(query, number)
+                    self.connection.commit()
+                    self.cursor.close()
+                    return number
+            else:
+                return None
 
     def display_all(self):
         '''
@@ -162,19 +157,6 @@ class Ensemble:
        # self.connection.commit()
         all_names = self.cursor.fetchall()
         return(all_names)
-
-    # def search_person(self, category, name):
-    #     names_fetched = []
-    #     for identification, information in self.list_person.items():
-    #         try:
-    #             if surname in information[category]:
-    #                 names_fetched.append(information)
-    #         except KeyError:
-    #             next
-    #     if len(names_fetched) > 0:
-    #         return names_fetched
-    #     else:
-    #         return None
 
     def search_person(self, person):
         '''
@@ -203,18 +185,13 @@ class Ensemble:
                     fetch[number] = fetch[number] + '%'
                     construction.append(fetch[number])
                     ask += "`"+column_names[number]+"`" + ' LIKE' + ' %s'
-            # SELECT * FROM `person` WHERE `surname` LIKE 'saad' AND `address` LIKE 'luminy'
             query = ("SELECT * FROM `person`"+ask)
-           # query = ("SELECT * FROM `person` WHERE `surname` LIKE %s")
             print(query)
             insertion = person
-            #test = ['saad']
-            # print(type(test))
             self.cursor.execute(query, construction)
             row = self.cursor.fetchall()
             print(row)
             names_fetched = row
-            # self.connection.commit()
             self.cursor.close()
             if len(names_fetched) > 0:
                 return names_fetched
