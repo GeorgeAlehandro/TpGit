@@ -2,9 +2,9 @@
 
 ## Introduction
 
-This exercise was done in the context of a practical exercise around MVC programming architecture. We are building a phone book.
-_To know more about MVC:_
-https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller
+This exercise was done in the context of a practical exercise around MVC programming architecture. We are building a phone book.  
+_To know more about MVC:_  
+https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller  
 _To know more about MySQL:_  
 https://dev.mysql.com/doc/
 
@@ -15,6 +15,7 @@ https://dev.mysql.com/doc/
 ## Requirements
 To run this test, python3 is needed to be installed along with the packages mentioned inside including _mysql.connector_.  
 MySQL and phpmyadmin configurations should be done in the local machine.  
+A databased named 'tp7' must be created inside localhost/phpmyadmin before running the script.  
 All the files should be in the same directory.
 
 
