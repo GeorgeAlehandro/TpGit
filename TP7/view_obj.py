@@ -12,7 +12,7 @@ from tkinter import Toplevel
 from tkinter import messagebox
 from tkinter.ttk import Treeview
 from tkinter.ttk import Scrollbar
-from ttkwidgets.autocomplete import AutocompleteEntry
+from tkinter import Entry
 from view import SuperView
 
 
@@ -31,35 +31,18 @@ class View(Tk, SuperView):
         self.widgets_entry = {}
         self.widgets_button = {}
         self.buttons = ["Search", "Insert", "Remove"]
-        self.extrabuttons = ["Content", "Clear"]
-        self.autocomplete_values = []
-        self.list_surname = []
-        self.list_name = []
-        self.list_telephone = []
-        self.list_address = []
-        self.list_city = []
-
-    def fetch_autocomplete_values(self):
-        '''
-        Returns a list containing the elements to be used in the autocompletion
-        entry. Elements are inside the memory.
-        '''
-        (self.list_surname, self.list_name,
-         self.list_telephone, self.list_address,
-         self.list_city) = self.controller.memory_generator()
-        self.autocomplete_values = [self.list_surname, self.list_name,
-                                    self.list_telephone,
-                                    self.list_address, self.list_city]
+        self.extrabuttons = ["Content", "Clear", "Reset ID"]
 
     def get_value(self):
         '''
         Returns the values introduced by the user.
         '''
-        entry_fetch = (self.widgets_entry["Surname"].get().title(),
+        entry_fetch = (self.widgets_entry['ID'].get(), self.widgets_entry["Surname"].get().title(),
                        self.widgets_entry["Name"].get(
         ).title(), self.widgets_entry["Telephone"].get().title(),
             self.widgets_entry["Address"].get().title(),
             self.widgets_entry["City"].get().title())
+        print(entry_fetch)
         if all(item == '' for item in entry_fetch):
             messagebox.showerror('Entry unavailable',
                                  self.error_messages[3])
@@ -69,28 +52,7 @@ class View(Tk, SuperView):
             messagebox.showerror(
                 'Insertion error', self.error_messages[2])
             return False
-        self.list_surname.append(entry_fetch[0])
-        self.list_name.append(entry_fetch[1])
-        self.list_telephone.append(entry_fetch[2])
-        self.list_address.append(entry_fetch[3])
-        self.list_city.append(entry_fetch[4])
-        self.update_values()
         return entry_fetch
-
-    def update_values(self):
-        '''
-        To update autocomplete values after user entry.
-        '''
-        self.widgets_entry["Surname"].config(
-            completevalues=self.list_surname)
-        self.widgets_entry["Name"].config(
-            completevalues=self.list_name)
-        self.widgets_entry["Telephone"].config(
-            completevalues=self.list_telephone)
-        self.widgets_entry["Address"].config(
-            completevalues=self.list_address)
-        self.widgets_entry["City"].config(
-            completevalues=self.list_city)
 
     def create_fields(self):
         '''
@@ -102,11 +64,11 @@ class View(Tk, SuperView):
             lab = Label(self, text=idi.title())
             self.widgets_labs[idi] = lab
             lab.grid(row=i, column=0)
-            entry = AutocompleteEntry(
+            entry = Entry(
                 self,
                 width=30,
                 font=('Times', 12),
-                completevalues=self.autocomplete_values[i]
+
 
             )
             self.widgets_entry[idi] = entry
@@ -135,18 +97,19 @@ class View(Tk, SuperView):
         '''
         Message display after delete.
         '''
-        if result is not None:
+        if result is not None and result is not False:
             messagebox.showinfo(title, result)
+        elif result is False:
+            messagebox.showerror(title, self.error_messages[4])
         else:
             messagebox.showerror(title, self.error_messages[1])
 
-    def insertion_display(self, title, result):
+    def message_display(self, title, result):
         '''
         Message display after insertion
         '''
         if result is not None:
             messagebox.showinfo(title, result)
-            self.fetch_autocomplete_values()
         else:
             messagebox.showerror(
                 title, self.error_messages[0])
@@ -159,7 +122,6 @@ class View(Tk, SuperView):
         '''
         message_closing = "Do you want to quit? Modifications will be saved."
         if messagebox.askokcancel("Quit", message_closing):
-            self.controller.save_notebook()
             self.destroy()
 
     def result_presentation(self, items_list):
@@ -169,8 +131,9 @@ class View(Tk, SuperView):
         if items_list is not None:
             treepresentation = Toplevel(self)
             treepresentation.title("Address Book")
-            columns = ("Surname", "Name", "Telephone", "Address", "City")
+            columns = ("ID", "Surname", "Name", "Telephone", "Address", "City")
             tree = Treeview(treepresentation, columns=columns, show='headings')
+            tree.heading("ID", text="ID")
             tree.heading("Surname", text="Surname")
             tree.heading("Name", text="Name")
             tree.heading("Telephone", text="Telephone")
@@ -178,9 +141,11 @@ class View(Tk, SuperView):
             tree.heading("City", text="City")
 
             for person in items_list:
-                tree.insert("", "end", values=(
-                    person['surname'], person['name'], person['telephone'],
-                    person['address'], person['city']))
+                print(person)
+                tree.insert("", "end", values=(str(person[0]),
+                                               person[1], person[2],
+                                               person[3], person[4],
+                                               person[5]))
 
             tree.grid(row=0, column=0, sticky='nsew')
             vsb = Scrollbar(treepresentation,
@@ -222,6 +187,8 @@ class View(Tk, SuperView):
         elif buttonid == "Clear":
             for value in self.widgets_entry.values():
                 value.delete(0, 'end')
+        elif buttonid == "Reset ID":
+            self.controller.reset_id()
 
     def main(self):
         '''
@@ -229,6 +196,5 @@ class View(Tk, SuperView):
         '''
         self.title("Phone Notebook")
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
-        self.fetch_autocomplete_values()
         self.create_fields()
         self.mainloop()
