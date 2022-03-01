@@ -141,7 +141,6 @@ class View(Tk, SuperView):
             tree.heading("City", text="City")
 
             for person in items_list:
-                print(person)
                 tree.insert("", "end", values=(str(person[0]),
                                                person[1], person[2],
                                                person[3], person[4],
