@@ -4,8 +4,6 @@
 The model file for the MVC structure of the phonebook program.
 """
 from __future__ import absolute_import
-import os.path
-import pickle
 import mysql.connector
 
 monServeur = "localhost"
@@ -29,8 +27,10 @@ class Person:
         self.set_surname(surname)
         self.set_name(name)
         self.telephone = telephone
-        self.address = address.title().lstrip().rstrip()
-        self.city = city.title().lstrip().rstrip()
+        if address is not None:
+            self.address = address.title().lstrip().rstrip()
+        if city is not None:
+            self.city = city.title().lstrip().rstrip()
 
     def set_surname(self, surname):
         '''
@@ -99,6 +99,20 @@ class Ensemble:
         self.connection = mysql.connector.connect(
             host=monServeur, user=monLogin, password=password, database="TP7")
         self.cursor = self.connection.cursor()
+        # Creating the table if doesnt exist.
+        query = ('''
+              CREATE TABLE IF NOT EXISTS `person`  (
+             `id` int NOT NULL AUTO_INCREMENT,
+             `surname` varchar(100) NOT NULL,
+             `name` varchar(100) NOT NULL,
+             `telephone` varchar(100) NOT NULL,
+             `address` varchar(100) NOT NULL,
+             `city` varchar(100) NOT NULL,
+             PRIMARY KEY (`id`)
+            ) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT
+            CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+              ''')
+        self.cursor.execute(query)
 
     def insert_person(self, person):
         '''
@@ -107,26 +121,40 @@ class Ensemble:
         # UPDATE `person` SET `name` = 'New' WHERE `person`.`ID` = 1;
 
         if isinstance(person, Person):
+            if not hasattr(person, 'surname') or not hasattr(person, 'name'):
+                return None
             person_info = person.get_surname().title(), person.get_prenom(
             ).title(), person.telephone, person.address, person.city, person.idi
-            print(person_info)
             if person.idi is not None:
                 query = ("Select `ID` from `person`;")
                 self.cursor.execute(query)
                 for idi in self.cursor.fetchall():
                     if int(person.idi) == idi[0]:  # Match on id:
                         query_2 = (
-                            "UPDATE `person` SET `surname` = %s, `name` = %s, `telephone` = %s, `address` = %s, `city` = %s WHERE `person`.`ID` = %s;")
+                            '''UPDATE `person` SET `surname` = %s, `name` = %s,
+                            `telephone` = %s, `address` = %s, `city` = %s
+                            WHERE `person`.`ID` = %s;''')
                         update = person_info
                         self.cursor.execute(query_2, update)
                         self.connection.commit()
+                        return "Modified"
+                else:
+                    query = (
+                        '''INSERT INTO `person` (`ID`, `surname`, `name`,
+                        `telephone`, `address`, `city`) VALUES
+                    (%s, %s, %s, %s, %s, %s);''')
+                    insertion = person.idi, person.get_surname().title(), person.get_prenom(
+                    ).title(), person.telephone, person.address, person.city
+                    self.cursor.execute(query, insertion)
+                    self.connection.commit()
+                    return "Inserted"
             else:
                 query = (
                     "INSERT INTO `person` (`ID`, `surname`, `name`, `telephone`, `address`, `city`) VALUES (NULL, %s, %s, %s, %s, %s);")
                 insertion = person_info[:-1]
                 self.cursor.execute(query, insertion)
                 self.connection.commit()
-                self.cursor.close()
+               # self.cursor.close()
                 return "Inserted"
         return None
 
@@ -134,16 +162,19 @@ class Ensemble:
         '''
         Person removal from an Ensemble.
         '''
-        if isinstance(person, (tuple, list)):
+        if isinstance(person, Person):
+            print(person.idi)
+            if person.idi is None:
+                return False
             query = ("DELETE FROM `person` WHERE `person`.`ID` = %s")
-            number = [person[0]]
+            number = [str(person.idi)]
+            print(number)
             query_2 = ("Select `ID` from `person`;")
             self.cursor.execute(query_2)
             for idi in self.cursor.fetchall():
                 if int(''.join(number)) == idi[0]:
                     self.cursor.execute(query, number)
                     self.connection.commit()
-                    self.cursor.close()
                     return number
             else:
                 return None
@@ -154,9 +185,18 @@ class Ensemble:
         '''
         query = ("select * from person")
         self.cursor.execute(query)
-       # self.connection.commit()
         all_names = self.cursor.fetchall()
         return(all_names)
+
+    def reset_id(self):
+
+        query = (
+            'ALTER TABLE `person` DROP id;ALTER TABLE  `person` ADD `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST')
+        self.cursor.execute(query)
+        self.connection = mysql.connector.connect(
+            host=monServeur, user=monLogin, password=password, database="TP7")
+        self.cursor = self.connection.cursor()
+        return 'Reset done, connection restablished.'
 
     def search_person(self, person):
         '''
@@ -181,7 +221,6 @@ class Ensemble:
                 if fetch[number] != '':
                     if ask != " WHERE ":
                         ask += " AND "
-                   # construction += "'"+str(fetch[number])+"',"
                     fetch[number] = fetch[number] + '%'
                     construction.append(fetch[number])
                     ask += "`"+column_names[number]+"`" + ' LIKE' + ' %s'
@@ -192,7 +231,6 @@ class Ensemble:
             row = self.cursor.fetchall()
             print(row)
             names_fetched = row
-            self.cursor.close()
             if len(names_fetched) > 0:
                 return names_fetched
             else:
