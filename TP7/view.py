@@ -18,9 +18,10 @@ class SuperView():
         self.entries = ["ID", "Surname", "Name",
                         "Telephone", "Address", "City"]
         self.error_messages = ["You need to specify name and surname.",
-                               "Surname Name not found in phonebook.",
+                               "ID not found in phonebook.",
                                "Telephone should be only digits.",
-                               'Entries cannot be all empty.'
+                               'Entries cannot be all empty.',
+                               "Deletion is only made based on ID."
                                ]
 
     # def create_interface(self):
