@@ -42,6 +42,8 @@ class View(SuperView):
                                  action='store_true')
         exclsv_args.add_argument('-d', '--displaydata',
                                  help="to show all data", action='store_true')
+        exclsv_args.add_argument('-reset', '--resetID',
+                                 help="to reset ID incrementation", action='store_true')
         exclsv_args.add_argument('-g', '--GUI', help="switch to GUI mode",
                                  action='store_true')
         return self.parser
@@ -60,6 +62,8 @@ class View(SuperView):
            # self.controller.save_notebook()
         if args.searchperson:
             self.controller.search()
+        if args.resetID:
+            self.controller.reset_id()
         if args.GUI:
             self.controller.switch_view()
 
@@ -89,7 +93,7 @@ class View(SuperView):
         else:
             print(self.error_messages[1])
 
-    def insertion_display(self, title, result):
+    def message_display(self, title, result):
         '''
         Message display after insertion
         '''
